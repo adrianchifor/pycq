@@ -1,0 +1,7 @@
+*.pyc
+*.swp
+*.bak
+build/
+dist/
+pycq.egg-info/
+tags
