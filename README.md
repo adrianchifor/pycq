@@ -1,5 +1,5 @@
 # pycq
-Simple distributed FIFO queue for CockroachDB/PostgreSQL in Python.
+Simple distributed FIFO queue for Python using CockroachDB/PostgreSQL.
 
 Exactly-once processing of messages. Holds all queues in a single table. Supports [psycopg2](https://pypi.org/project/psycopg2/) driver.
 
