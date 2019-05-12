@@ -49,7 +49,8 @@ conn = psycopg2.connect(database=<database>,
                         host=<host>,
                         port=26257)
 
-queue = CQ(conn, table="queue") # Default table used is 'queue'
+queue = CQ(conn, table="queue")  # Default table is 'queue'
+# Put {"foo": "bar"} on "example" queue
 queue.put("example", {"foo": "bar"})
 
 conn.close()
@@ -57,7 +58,6 @@ conn.close()
 
 ### Consumer
 ```python
-import time
 import psycopg2
 from pycq import CQ
 
@@ -68,20 +68,23 @@ conn = psycopg2.connect(database=<database>,
 
 queue = CQ(conn)
 
-def process(message):
-  # Do stuff with message["data"]
+def handler(message):
+    print(f"{message}")
+    # {
+    #   'data': {'foo': 'bar'},
+    #   'enqueued_at': datetime.datetime(2019, 5, 12, 17, 46, 57, 351679)
+    # }
 
-while True:
-  message = queue.get("example")
-  if message:
-      print(f"{message}")
-      # {
-      #   'data': {'foo': 'bar'},
-      #   'enqueued_at': datetime.datetime(2018, 11, 24, 20, 00, 0, 251690)
-      # }
-      process(message)
-
-  time.sleep(0.1) # Be nice to the system
-
-conn.close()
+try:
+    # Subscribe to "example" queue and pass messages to handler function
+    queue.subscribe("example", callback=handler,
+        # The following are optional and default values
+        # e.g. Poll every 0.5s after a message is found or polling has just started.
+        #      Switch to polling every 2s if the queue stays empty for 10s.
+        poll_interval=2.0,
+        burst_poll_interval=0.5,
+        burst_decay_interval=10.0
+    )
+except KeyboardInterrupt:
+    conn.close()
 ```
