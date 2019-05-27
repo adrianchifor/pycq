@@ -4,13 +4,13 @@ Simple distributed FIFO queue for Python using CockroachDB/PostgreSQL.
 Exactly-once processing of messages. Holds all queues in a single table. Supports [psycopg2](https://pypi.org/project/psycopg2/) driver.
 
 Benchmarks for [CockroachDB 3-node cluster](https://www.cockroachlabs.com/docs/stable/orchestrate-cockroachdb-with-kubernetes.html) on Kubernetes:
-- n1-standard-1 nodes with standard disk ~ 300 ops/sec
-- n1-highcpu-2 nodes with ssd disk ~ 700 ops/sec
-- n1-highcpu-16 nodes with ssd disk ~ 4500 ops/sec
+- n1-standard-1 nodes with standard disk ~ 300 ops/s
+- n1-highcpu-2 nodes with ssd disk ~ 700 ops/s
+- n1-highcpu-16 nodes with ssd disk ~ 4500 ops/s
 
 ## Install
 ```
-pip3 install --user pycq
+pip3 install pycq
 ```
 
 ## DB Setup
@@ -50,7 +50,6 @@ conn = psycopg2.connect(database=<database>,
                         port=26257)
 
 queue = CQ(conn, table="queue")  # Default table is 'queue'
-# Put {"foo": "bar"} on "example" queue
 queue.put("example", {"foo": "bar"})
 
 conn.close()
@@ -76,7 +75,6 @@ def handler(message):
     # }
 
 try:
-    # Subscribe to "example" queue and pass messages to handler function
     queue.subscribe("example", callback=handler,
         # The following are optional and default values
         # e.g. Poll every 0.5s after a message is found or polling has just started.

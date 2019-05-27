@@ -47,7 +47,7 @@ setup(
         'Programming Language :: Python :: 3.7'
     ],
 
-    keywords='cockroachdb postgresql distributed queue',
+    keywords='cockroachdb postgresql distributed queue pubsub',
     py_modules=["pycq"],
     python_requires=">=3.6",
     packages=find_packages(),
